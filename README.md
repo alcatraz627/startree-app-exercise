@@ -6,7 +6,7 @@ Purpose: Simple React Application demonstrating the use of various common functi
 
 ## Screenshot
 
-![image.png]()
+![App Preview](https://user-images.githubusercontent.com/20799363/184379517-1d502d03-1019-4516-93d5-2cdc784f21fa.png)
 
 ## Running the application
 
@@ -22,5 +22,5 @@ This project was developed using `yarn`, so it is recommended that yarn be used 
 
 ## Further Improvements
 
--   [ ] Add import aliasing in tsconfig.json
+-   [ ] Fix the import aliasing issue in tsconfig.json
 -   [ ] Set up selectors for the store
