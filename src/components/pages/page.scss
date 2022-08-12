@@ -1,3 +1,4 @@
+@import "src/styles/variables";
 .page {
     border: 1px solid #ccc;
     background-color: #fafafacc;
@@ -6,9 +7,37 @@
     border-radius: 8px;
     width: 100%;
     max-width: 800px;
-    height: 70%;
-    
+    height: fit-content;
+    min-height: 80vh;
+    max-height: 600px;
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+.pageTitle {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.pageContent {
+    padding: 12px 8px;
+    font-size: 16px;
+    font-family: serif;
+    background-color: #fff3;
+    border: 1px dashed #7777;
+    border-radius: 4px;
+}
+
+.author {
+    float: right;
+}
+@media screen and (max-width: $mobile-breakpoint) {
+    .page {
+        min-height: 85vh;
+    }
+    .pageTitle {
+        font-size: 20px;
+    }
 }

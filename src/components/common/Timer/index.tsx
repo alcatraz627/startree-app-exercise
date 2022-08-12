@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useStore } from "../../../data/index";
 
 import styles from "./timer.scss";
+import commonStyles from "../../../styles/common.scss";
 
 import {
     DEFAULT_DURATION,
@@ -12,27 +13,36 @@ import {
     MAX_SECONDS_IN_A_DAY,
 } from "../../../constants";
 
+interface ITimeValues {
+    endTime: number;
+    duration: number;
+}
+
+const getStartTime = ({ endTime, duration }: ITimeValues) =>
+    addMilliseconds(endTime, -1 * duration).valueOf();
+
+const timezoneOffset = new Date().getTimezoneOffset() * 1000 * 60;
+
 const getOutputData = ({
-    startTime,
     duration,
     endTime,
-}: {
-    startTime: number;
-    duration: number;
-    endTime: number;
-}) => ({
+    isCustomDuration,
+}: ITimeValues & { isCustomDuration: boolean }) => ({
     startTime: {
         label: "Start Time",
-        value: format(startTime, DATE_FORMAT),
+        value: format(getStartTime({ duration, endTime }), DATE_FORMAT),
+        raw: getStartTime({ duration, endTime }) - timezoneOffset,
     },
     duration: {
-        label: "Duration",
-        value: format(
-            duration + new Date(duration).getTimezoneOffset() * 1000 * 60,
-            DATE_FORMAT
-        ),
+        label: `Duration${isCustomDuration ? " (custom)" : "(default)"}`,
+        value: format(duration + timezoneOffset, DATE_FORMAT),
+        raw: duration,
     },
-    endTime: { label: "End Time", value: format(endTime, DATE_FORMAT) },
+    endTime: {
+        label: "End Time",
+        value: format(endTime, DATE_FORMAT),
+        raw: endTime - timezoneOffset,
+    },
 });
 
 const Timer = ({ userDuration }: { userDuration?: number }) => {
@@ -48,21 +58,29 @@ const Timer = ({ userDuration }: { userDuration?: number }) => {
 
     const timer = useRef<number | null>();
 
-    const startTime: number = addMilliseconds(endTime, -1 * duration).valueOf();
-
-    const outputStrings = getOutputData({ startTime, duration, endTime });
-
     const isCustomDuration: boolean = duration !== DEFAULT_DURATION;
 
-    const updateEndTime = (newEndTime: number): void => {
-        if (!newEndTime) return;
+    const outputStrings = getOutputData({
+        duration,
+        endTime,
+        isCustomDuration,
+    });
 
-        setEndTime(newEndTime);
+    const updateEndTime = (): void => {
+        setEndTime(Date.now());
+    };
 
+    const updateSearchParams = ({
+        duration: durationProp,
+        endTime: endTimeProp,
+    }: ITimeValues) => {
         setSearchParams({
-            startTime: `${startTime}`,
-            duration: `${duration}`,
-            endTime: `${endTime}`,
+            startTime: `${getStartTime({
+                endTime: endTimeProp,
+                duration: durationProp,
+            })}`,
+            duration: `${durationProp}`,
+            endTime: `${endTimeProp}`,
         });
     };
 
@@ -75,7 +93,7 @@ const Timer = ({ userDuration }: { userDuration?: number }) => {
         }
     };
 
-    const handleReset = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const handleResetDuration = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
 
         setDuration(DEFAULT_DURATION);
@@ -83,9 +101,15 @@ const Timer = ({ userDuration }: { userDuration?: number }) => {
         return false;
     };
 
+    // Initialise the timer when the component mounts and clean it up when the component unmounts
     useEffect(() => {
+        updateSearchParams({
+            duration,
+            endTime,
+        });
+
         timer.current = setInterval(() => {
-            updateEndTime(Date.now());
+            updateEndTime();
         }, 1000);
 
         return () => {
@@ -94,7 +118,27 @@ const Timer = ({ userDuration }: { userDuration?: number }) => {
                 timer.current = null;
             }
         };
-    });
+    }, []);
+
+    // Update the url params correspondingly whenever the state values change
+    useEffect(() => {
+        updateSearchParams({
+            duration,
+            endTime,
+        });
+    }, [duration, endTime]);
+
+    const CustomDurationButton = ({ style = "" }: { style: string }) =>
+        isCustomDuration ? (
+            <a
+                className={`${styles.resetDurationInput} ${style}`}
+                href={window.location.pathname}
+                onClick={handleResetDuration}
+                title={`Reset duration to ${DEFAULT_DURATION / 1000}s`}
+            >
+                Reset Duration
+            </a>
+        ) : null;
 
     return (
         <div className={styles.root}>
@@ -105,18 +149,7 @@ const Timer = ({ userDuration }: { userDuration?: number }) => {
                     <label className={styles.inputLabel} htmlFor="duration">
                         Enter a duration (in seconds)
                     </label>
-                    {isCustomDuration ? (
-                        <a
-                            className={styles.resetDurationInput}
-                            href={window.location.pathname}
-                            onClick={handleReset}
-                            title={`Reset duration to ${
-                                DEFAULT_DURATION / 1000
-                            }s`}
-                        >
-                            Reset
-                        </a>
-                    ) : null}
+                    <CustomDurationButton style={commonStyles.onlyDesktop} />
                 </div>
                 <input
                     id="duration"
@@ -125,14 +158,25 @@ const Timer = ({ userDuration }: { userDuration?: number }) => {
                     value={Math.floor(duration / 1000)}
                     onChange={handleUpdateDuration}
                 />
+                <CustomDurationButton style={commonStyles.onlyMobile} />
+                <label className={styles.inputLabel} htmlFor="duration">
+                    Maximum allowed value is {MAX_SECONDS_IN_A_DAY / 1000}s (23h
+                    59m 59s)
+                </label>
             </div>
 
             <div className={styles.timerRow}>
                 {Object.entries(outputStrings).map(
-                    ([key, { label, value }]) => (
+                    ([key, { label, value, raw }]) => (
                         <div className={styles.timerItem} key={key}>
                             <div className={styles.timerItemLabel}>{label}</div>
                             <div className={styles.timerItemValue}>{value}</div>
+                            <div className={styles.timerItemLabel}>
+                                [
+                                {Math.floor(raw / 1000) %
+                                    (MAX_SECONDS_IN_A_DAY / 1000 + 1)}
+                                s]
+                            </div>
                         </div>
                     )
                 )}

@@ -58,4 +58,7 @@
 }
 
 @media screen and (max-width: $mobile-breakpoint) {
+.root {
+    padding: 12px 24px;
+}
 }
