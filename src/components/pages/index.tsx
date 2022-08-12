@@ -7,8 +7,10 @@ import styles from "./page.scss";
 const Page = ({ index }: { index: number }) => {
     return (
         <div className={styles.page}>
-            Page {index}
-            <hr />
+            <div className={styles.pageTitle}>
+                Page {index}
+                <hr />
+            </div>
             <Timer />
         </div>
     );

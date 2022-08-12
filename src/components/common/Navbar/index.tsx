@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 import styles from "./navbar.scss";
+import commonStyles from "../../../styles/common.scss";
 
 const ROUTES = [
     { route: "screen-a", title: "Screen A", minifiedTitle: "A" },
@@ -18,7 +19,7 @@ const Navbar = () => {
                 Navbar
             </a>
             <div className={styles.links}>
-                {ROUTES.map(({ route, title }) => (
+                {ROUTES.map(({ route, title, minifiedTitle }) => (
                     <NavLink
                         className={({ isActive }) =>
                             `${styles.link} ${
@@ -28,7 +29,8 @@ const Navbar = () => {
                         key={route}
                         to={`${route}${search}`}
                     >
-                        {title}
+                        <div className={commonStyles.onlyDesktop}>{title}</div>
+                        <div className={commonStyles.onlyMobile}>{minifiedTitle}</div>
                     </NavLink>
                 ))}
             </div>

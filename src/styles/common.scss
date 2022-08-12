@@ -1,7 +1,9 @@
 @import "./variables.scss";
 
-.onlyMobile {
-    display: none;
+@media screen and (min-width: #{$mobile-breakpoint+1px}) {
+    .onlyMobile {
+        display: none;
+    }
 }
 
 @media screen and (max-width: $mobile-breakpoint) {
