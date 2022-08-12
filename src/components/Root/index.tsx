@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import {
     BrowserRouter,
     Routes,
@@ -43,7 +43,17 @@ const Main = () => {
                         <Route
                             key={route}
                             path={route}
-                            element={<Component />}
+                            element={
+                                <Suspense
+                                    fallback={
+                                        <div className={styles.loading}>
+                                            Loading...
+                                        </div>
+                                    }
+                                >
+                                    <Component />
+                                </Suspense>
+                            }
                         />
                     ))}
                 </Routes>
