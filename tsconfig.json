@@ -12,7 +12,16 @@
         "allowSyntheticDefaultImports": true,
         "removeComments": true,
         "types": ["webpack-env"],
-        "lib": ["dom", "esnext"]
+        "lib": ["dom", "esnext"],
+        "declaration": true,
+        "baseUrl": ".",
+        "paths": {
+            "@Styles": ["src/styles"],
+            "@Styles/*": ["src/styles/*"],
+            "@Const/*": ["constants/*"],
+            "@Components/*": ["components/*"],
+            "@Common/*": ["components/common/*"]
+        }
     },
     "include": ["./src"],
     "exclude": ["node_modules"]

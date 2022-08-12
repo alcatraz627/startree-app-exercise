@@ -1,9 +1,14 @@
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const WebpackMessages = require("webpack-messages");
+const dotenv = require("dotenv");
 
-module.exports = {
+const isDevelopment = process.env.NODE_ENV === "development";
+
+const config = {
     entry: "./src/index.tsx",
     devtool: "inline-source-map",
+    stats: "errors-warnings",
     module: {
         rules: [
             {
@@ -25,18 +30,19 @@ module.exports = {
             {
                 test: /\.(scss|sass|css)$/,
                 use: [
-                    {
-                        loader: "style-loader",
-                    },
+                    "style-loader",
                     {
                         loader: "css-loader",
                         options: {
-                            modules: true,
+                            modules: {
+                                localIdentName: isDevelopment
+                                    ? "[path][name]__[local]--[hash:base64:5]"
+                                    : "[hash:base64]",
+                            },
+                            importLoaders: 1,
                         },
                     },
-                    {
-                        loader: "sass-loader",
-                    },
+                    "sass-loader",
                 ],
                 // use: [
                 //     "style-loader",
@@ -65,10 +71,16 @@ module.exports = {
         extensions: ["*", ".js", ".jsx", ".ts", ".tsx"],
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin({}),
+        new WebpackMessages({
+            name: "client",
+            logger: (str) => console.log(`>> ${str}`),
+        }),
+        new webpack.DefinePlugin({
+            "process.env": JSON.stringify(dotenv.config().parsed),
+        }),
         new HtmlWebpackPlugin({
             filename: "index.html",
-            title: "Carthago delenda est",
+            title: "Startree App Exercise",
             template: "src/index.ejs",
             meta: {
                 viewport:
@@ -82,11 +94,22 @@ module.exports = {
         filename: "bundle.js",
     },
     devServer: {
-        static: __dirname + "./dist",
+        static: __dirname + "/dist",
 
-        // hot: true,
+        hot: true,
         port: 9000,
         compress: true,
         historyApiFallback: true,
+        client: {
+            progress: true,
+            logging: "warn",
+        },
+        onListening: (devServer) => {
+            console.log(
+                `Server listening on http://127.0.0.1:${devServer.options.port}`
+            );
+        },
     },
 };
+
+module.exports = config;
