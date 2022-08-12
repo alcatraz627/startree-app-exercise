@@ -1,0 +1,11 @@
+@import "./variables.scss";
+
+.onlyMobile {
+    display: none;
+}
+
+@media screen and (max-width: $mobile-breakpoint) {
+    .onlyDesktop {
+        display: none;
+    }
+}

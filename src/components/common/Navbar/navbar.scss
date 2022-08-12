@@ -1,0 +1,67 @@
+@import "src/styles/variables";
+
+.root {
+    border: 1px solid #ddd;
+    padding: 16px 24px;
+    background-color: #fffa;
+    backdrop-filter: blur(20px);
+
+    width: calc(100% - 48px);
+    left: 0;
+    right: 0;
+    position: fixed;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #555;
+    text-decoration: none;
+    transition: 0.15s ease all;
+    &:hover {
+        color: #003;
+    }
+}
+
+.links {
+    display: flex;
+    flex-direction: row;
+
+    .link {
+        padding: 4px 12px;
+        margin: 0px 4px;
+        border-radius: 4px;
+        color: #333;
+        transition: 0.15s ease all;
+        display: inline-block;
+        border: 2px solid transparent;
+
+        &,
+        &:hover,
+        &:visited {
+            text-decoration: none;
+        }
+        &:hover {
+            background-color: #afa3;
+            transform: translateY(-1px);
+        }
+        &.activeLink {
+            background-color: #afa7;
+            border-color: #afa7;
+        }
+    }
+}
+
+@media screen and (max-width: $mobile-breakpoint) {
+    .root {
+        // flex-direction: column;
+    }
+    .links {
+        flex-direction: column;
+    }
+}

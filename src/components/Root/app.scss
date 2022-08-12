@@ -1,0 +1,24 @@
+.root {
+    color: #333;
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    background-color: #ccf;
+    background-image: url("https://picsum.photos/1600");
+    background-position: center center;
+    background-size: cover;
+}
+.container {
+    padding: 80px 24px 12px;
+    width: calc(100% - 48px);
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+

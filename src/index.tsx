@@ -3,17 +3,18 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 
-import App from "./components/App";
+import AppRoot from "./components/Root";
 
-import "./global.scss";
+import "./styles/global.scss";
 
-const renderApp = () =>
-    createRoot(document.getElementById("root")!).render(<App />);
+const container = document.getElementById("root")!;
+const root = createRoot(container);
+const renderApp = () => root.render(<AppRoot />);
 
 renderApp();
 
 if (module.hot) {
-    module.hot.accept("./components/App", () => {
+    module.hot.accept("./components/Root", () => {
         renderApp();
     });
 }

@@ -1,0 +1,44 @@
+@import "src/styles/variables";
+
+.root {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.title {
+    font-size: 24px;
+    padding-bottom: 12px;
+}
+
+.timerRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 60vw;
+}
+
+.timerItem {
+    text-align: center;
+    margin: 8px 24px;
+}
+.timerItemLabel {
+    font-family: monospace;
+}
+.timerItemValue {
+    font-size: 36px;
+    font-weight: 300;
+}
+
+@media screen and (max-width: $mobile-breakpoint) {
+    .timerRow {
+        flex-direction: column;
+        justify-content: center;
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+}
