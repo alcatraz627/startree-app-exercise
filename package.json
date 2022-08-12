@@ -1,19 +1,21 @@
 {
-    "name": "enter_name_app_here",
+    "name": "startree-app-exercise",
     "version": "1.0.0",
-    "main": "index.js",
+    "main": "index.tsx",
     "license": "MIT",
     "dependencies": {
         "date-fns": "^2.29.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.3.0",
+        "serve": "^14.0.1",
         "webpack": "^5.74.0",
         "zustand": "^4.0.0"
     },
     "scripts": {
         "start": "NODE_ENV=development webpack-dev-server --config ./webpack.config.js --mode development",
-        "build": "NODE_ENV=production webpack --mode production"
+        "build": "NODE_ENV=production webpack --mode production",
+        "build:serve": "serve dist"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.18.10",

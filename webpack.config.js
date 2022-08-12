@@ -80,7 +80,7 @@ const config = {
         }),
         new HtmlWebpackPlugin({
             filename: "index.html",
-            title: "Startree App Exercise",
+            title: "StarTree App Exercise",
             template: "src/index.ejs",
             meta: {
                 viewport:
@@ -91,7 +91,12 @@ const config = {
     output: {
         path: __dirname + "/dist",
         publicPath: "/",
-        filename: "bundle.js",
+        filename: "[name].bundle.js",
+    },
+    optimization: {
+        splitChunks: {
+            chunks: "all",
+        },
     },
     devServer: {
         static: __dirname + "/dist",
